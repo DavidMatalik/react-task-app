@@ -5,7 +5,9 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      value: '',
+      task: {
+        text: '',
+      },
       tasks: [],
     }
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -14,34 +16,37 @@ class App extends Component {
 
   handleChange(event) {
     this.setState({
-      value: event.target.value,
+      task: {
+        text: event.target.value,
+      },
     })
   }
 
   handleSubmit(event) {
-    let newTask = this.state.value
+    let newTask = this.state.task
     let currentTasks = this.state.tasks
     currentTasks.push(newTask)
 
     this.setState({
+      task: {
+        text: '',
+      },
       tasks: currentTasks,
     })
     event.preventDefault()
   }
 
   render() {
+    const { task, tasks } = this.state
+
     return (
       <div>
         <h1>Task App</h1>
         <form onSubmit={this.handleSubmit}>
-          <input
-            type='text'
-            value={this.state.value}
-            onChange={this.handleChange}
-          />
+          <input type='text' value={task.text} onChange={this.handleChange} />
           <input type='submit' value='Add Task' />
         </form>
-        <Overview tasks={this.state.tasks} />
+        <Overview tasks={tasks} />
       </div>
     )
   }
