@@ -1,5 +1,6 @@
 import Overview from './components/Overview'
 import React, { Component } from 'react'
+import uniqid from 'uniqid'
 
 class App extends Component {
   constructor(props) {
@@ -7,17 +8,20 @@ class App extends Component {
     this.state = {
       task: {
         text: '',
+        id: uniqid(),
       },
       tasks: [],
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.handleDelete = this.handleDelete.bind(this)
   }
 
   handleChange(event) {
     this.setState({
       task: {
         text: event.target.value,
+        id: this.state.task.id,
       },
     })
   }
@@ -30,10 +34,21 @@ class App extends Component {
     this.setState({
       task: {
         text: '',
+        id: uniqid(),
       },
       tasks: currentTasks,
     })
     event.preventDefault()
+  }
+
+  handleDelete(event) {
+    const newTasks = this.state.tasks.filter((el) => {
+      return el.id !== event.target.dataset.id
+    })
+
+    this.setState({
+      tasks: newTasks,
+    })
   }
 
   render() {
@@ -46,7 +61,7 @@ class App extends Component {
           <input type='text' value={task.text} onChange={this.handleChange} />
           <input type='submit' value='Add Task' />
         </form>
-        <Overview tasks={tasks} />
+        <Overview tasks={tasks} handleDelete={this.handleDelete} />
       </div>
     )
   }
